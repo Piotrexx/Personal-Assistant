@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 import wikipedia
+import time
 r = sr.Recognizer() # initiaze the speech recognizer
 
 def Greetings(): # function that's greet the user depending on the day time
@@ -51,3 +52,6 @@ if __name__ == '__main__':
             tts("According to Wikipedia")
             print(results)
             tts(results)
+        elif 'time' in command:
+            Time = datetime.datetime.now().strftime("%H:%M:%S")
+            tts(f"It is {Time}")
