@@ -2,7 +2,8 @@
 ## Introduction
 
 In this project I will try to develop personal assistant using Python !
-
+All commands have to be said in english
+Assistant can search term in wikipedia for you and read it, can answer what's the time question.
 ### Packages
 
 ```shell
