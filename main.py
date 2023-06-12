@@ -50,15 +50,16 @@ if __name__ == '__main__':
             break
         if 'wikipedia' in command: # search for wikipedia
             tts('Searching Wikipedia...')
-            command =command.replace("wikipedia", "")
-            results = wikipedia.summary(command, sentences=3)
+            command =command.replace("wikipedia", "") # replacing word wikipedia with nothing (it is vital to do that because we don't want to search for example: Robert Lewandowski wikipedia. We want to delete that word)
+            results = wikipedia.summary(command, sentences=3) # using pip install to install wikipedia and using it function/modules to summary the whole wikipedia page 
             tts("According to Wikipedia")
             print(results)
-            tts(results)
+            tts(results) # saying the results 
         elif 'time' in command:
             Time = datetime.datetime.now().strftime("%H:%M:%S")
             tts(f"It is {Time}")
-        elif 'search' in command:
+
+        elif 'search' in command: # this command does not work (still working on web scraping or thinking about other solution)
             URL = "https://www.google.co.in/search?q=" + command.replace(" ", "+")
             page = requests.get(URL)
             soup = BeautifulSoup(page.content, 'html.parser')
@@ -66,20 +67,20 @@ if __name__ == '__main__':
             print(page)
             results = soup.find('div', {'role': 'heading', 'aria-level':3})
             tts(results)
+
         elif "weather" in command:
-            load_dotenv()
-            API_KEY = os.getenv("API_KEY")
+            load_dotenv() # loading .env file
+            API_KEY = os.getenv("API_KEY") # passing my API key
             tts("Say you city name")
-            city_name = listen().lower()
+            city_name = listen().lower() # listening for the name of the city
             while True:
                 if city_name == 0:
                     continue
                 else:
                     break
 
-            response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_KEY}")
-            data = response.json()
-            temperature = data['main']['temp']
-            weather = data['weather'][0]['description']
-            tts(f"It's {temperature} Celsius, and it's a {weather}")
-            print(temperature)
+            response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_KEY}") # this the request for the data
+            data = response.json() # pass it to json
+            temperature = data['main']['temp'] # getting temperature 
+            weather = data['weather'][0]['description'] # getting weather
+            tts(f"It's {temperature} Celsius, and it's a {weather}") # saying all the data
