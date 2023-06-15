@@ -18,3 +18,6 @@ pip install SpeechRecognition
 pip install pyaudio
 ```
 
+```shell
+pip install google-search-results
+```

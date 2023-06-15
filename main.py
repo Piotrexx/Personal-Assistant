@@ -5,8 +5,9 @@ from bs4 import BeautifulSoup
 import datetime
 import wikipedia
 import time
-import os 
+import os , json
 from dotenv import load_dotenv
+from serpapi import GoogleSearch
 r = sr.Recognizer() # initiaze the speech recognizer
 
 def Greetings(): # function that's greet the user depending on the day time
@@ -70,7 +71,7 @@ if __name__ == '__main__':
 
         elif "weather" in command:
             load_dotenv() # loading .env file
-            API_KEY = os.getenv("API_KEY") # passing my API key
+            API_KEY = os.getenv("WEATHER_API_KEY") # passing my API key
             tts("Say you city name")
             city_name = listen().lower() # listening for the name of the city
             while True:
@@ -84,3 +85,21 @@ if __name__ == '__main__':
             temperature = data['main']['temp'] # getting temperature 
             weather = data['weather'][0]['description'] # getting weather
             tts(f"It's {temperature} Celsius, and it's a {weather}") # saying all the data
+        
+        elif 'test' in command:
+            # tts("What is your country ?")
+            # country = listen().lower()
+            params = {
+                "api_key": os.getenv("SEARCH_API_KEY"),
+                "engine": "google",
+                "q": "Coffee" , # command.replace('test', '')
+                # 'location': "United States", # country
+                # "google_domain": "google.com",
+                # "gl": "us",
+                # "hl": 'en'
+            }
+            search = GoogleSearch(params)
+            results = search.get_dict()
+            knowledge_graph = results["knowledge_graph"]
+            print(knowledge_graph)
+            # print(json.dump(results['knowledge_graph'], indent=2, ensure_ascii=False))
