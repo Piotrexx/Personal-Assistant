@@ -13,6 +13,7 @@ from Greetings import Greetings
 from Listen import listen
 
 
+
 if __name__ == '__main__':
     Greetings()
     while True: # infinite loop that wait for command 
@@ -51,32 +52,40 @@ if __name__ == '__main__':
             weather = data['weather'][0]['description'] # getting weather
             tts(f"It's {temperature} Celsius, and it's a {weather}") # saying all the data
         
-        # elif 'search' in command:
-        #     # tts("What is your country ?")
-        #     # country = listen().lower()
-        #     params = {
-        #         "api_key": os.getenv("SEARCH_API_KEY"),
-        #         "engine": "google",
-        #         "q": "Coffee" , # command.replace('test', '')
-        #         # 'location': "United States", # country
-        #         # "google_domain": "google.com",
-        #         # "gl": "us",
-        #         # "hl": 'en'
-        #     }
-        #     search = GoogleSearch(params)
-        #     results = search.get_dict()
-        #     knowledge_graph = results["knowledge_graph"]
-        #     print(knowledge_graph)
-        #     # print(json.dump(results['knowledge_graph'], indent=2, ensure_ascii=False))
-
-
-
-    
-        # elif 'search' in command: # this command does not work (still working on web scraping or thinking about other solution)
-        #     URL = "https://www.google.co.in/search?q=" + command.replace(" ", "+")
-        #     page = requests.get(URL)
-        #     soup = BeautifulSoup(page.content, 'html.parser')
-        #     print(soup)
-        #     print(page)
-        #     results = soup.find('div', {'role': 'heading', 'aria-level':3})
-        #     tts(results)
+        elif "calculate" in command:
+            load_dotenv() # loading .env file
+            params = {
+              "api_key": os.getenv("SEARCH_API_KEY"),
+              "engine": "google",
+              "q": command.replace('calculate', ''),
+              "google_domain": "google.com",
+              "gl": "us",
+              "hl": "en"
+            }
+            try:
+                search = GoogleSearch(params)
+                results = search.get_dict()
+                answer_box = results["answer_box"]
+                tts(answer_box['result'])
+            except Exception as e:
+                print(e)
+                tts("Try something else or say that again")
+        
+        elif "definition" in command:
+            load_dotenv()
+            params = {
+              "api_key": os.getenv("SEARCH_API_KEY"),
+              "engine": "google",
+              "q":  command,
+              "google_domain": "google.com",
+              "gl": "us",
+              "hl": "en"
+            }
+            try:
+                search = GoogleSearch(params)
+                results = search.get_dict()
+                answer_box = results["answer_box"]
+                tts(answer_box['definitions'])
+            except Exception as e:
+                print(e)
+                tts("Try something else or say that again")
