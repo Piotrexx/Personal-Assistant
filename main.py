@@ -8,29 +8,35 @@ import time
 import os , json
 from dotenv import load_dotenv
 from serpapi import GoogleSearch
+from utils.Greetings import Greetings
+from utils.Listen import listen
+
+
+
 r = sr.Recognizer() # initiaze the speech recognizer
-from Greetings import Greetings
-from Listen import listen
 
 
-
-if __name__ == '__main__':
+if __name__ == '__main__': # Code executes when ran as script but not as a imported module
     Greetings()
     while True: # infinite loop that wait for command 
         tts("Hello, how can I help ?")
         command = listen().lower()
+
         if command == 0:
             continue
+
         if "good bye" in command or "bye" in command or "stop" in command: # if command (your sentence) contains good bye, bye or stop, program will turn off
             tts("Personal AI shutting down")
             break
+
         if 'wikipedia' in command: # search for wikipedia
             tts('Searching Wikipedia...')
             command =command.replace("wikipedia", "") # replacing word wikipedia with nothing (it is vital to do that because we don't want to search for example: Robert Lewandowski wikipedia. We want to delete that word)
             results = wikipedia.summary(command, sentences=3) # using pip install to install wikipedia and using it function/modules to summary the whole wikipedia page 
             tts("According to Wikipedia")
-            print(results)
+            # print(results)
             tts(results) # saying the results 
+
         elif 'time' in command:
             Time = datetime.datetime.now().strftime("%H:%M:%S")
             tts(f"It is {Time}")
@@ -40,6 +46,7 @@ if __name__ == '__main__':
             API_KEY = os.getenv("WEATHER_API_KEY") # passing my API key
             tts("Say you city name")
             city_name = listen().lower() # listening for the name of the city
+
             while True:
                 if city_name == 0:
                     continue
@@ -62,17 +69,20 @@ if __name__ == '__main__':
               "gl": "us",
               "hl": "en"
             }
+
             try:
                 search = GoogleSearch(params)
                 results = search.get_dict()
                 answer_box = results["answer_box"]
                 tts(answer_box['result'])
+
             except Exception as e:
                 print(e)
                 tts("Try something else or say that again")
         
         elif "definition" in command:
             load_dotenv()
+
             params = {
               "api_key": os.getenv("SEARCH_API_KEY"),
               "engine": "google",
@@ -81,11 +91,33 @@ if __name__ == '__main__':
               "gl": "us",
               "hl": "en"
             }
+
             try:
                 search = GoogleSearch(params)
                 results = search.get_dict()
                 answer_box = results["answer_box"]
                 tts(answer_box['definitions'])
             except Exception as e:
+
+                print(e)
+                tts("Try something else or say that again")
+        elif "answer me" in command:
+            load_dotenv()
+
+            params = {
+              "api_key": os.getenv("SEARCH_API_KEY"),
+              "engine": "google",
+              "q":  command.replace('answer me', ''),
+              "google_domain": "google.com",
+              "gl": "us",
+              "hl": "en"
+            }
+            try:
+                search = GoogleSearch(params)
+                results = search.get_dict()
+                answer_box = results["answer_box"]
+                tts(answer_box['snippet'])
+            except Exception as e:
+
                 print(e)
                 tts("Try something else or say that again")
